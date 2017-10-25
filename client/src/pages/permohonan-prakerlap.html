@@ -1,0 +1,122 @@
+<div class="row-fluid menu hidden-print">
+    <br>
+    <div class="menu-box col-sm-8 col-sm-offset-2">
+        <div class="form-group col-sm-2">
+            <select name="progli" id="progli" class="form-control" ng-model="progli" ng-change="changeProgli()">
+                <option value="tki">TKI</option>
+                <option value="to">TO</option>
+            </select>
+            
+        </div>
+        
+        <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="noSur" placeholder="Masukkan No. Surat">
+        </div>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="dudi" placeholder="Masukkan Dudi">
+        </div>
+        <div class="col-sm-1">
+                <button class="btn btn-warning" onclick="window.print()">Cetak</button>
+            </div>
+    </div>
+   
+</div>
+<div class="printMohon page potrait col-sm-6 col-sm-offset-3">
+    <div class="mohonHeader ">
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="assets/img/jatim.jpg" alt="Logo Jatim" class="headLogo block-center" width=75px>
+            </div>
+            <div class="col-sm-10">
+                <h4 class="text-center">
+                    PEMERINTAH PROVINSI JAWA TIMUR <br>
+                    DINAS PENDIDIKAN <br>
+                    <strong>SEKOLAH MENENGAH KEJURUAN NEGERI 10 MALANG</strong>
+                </h4>
+                <p class="text-center">Jl. Raya Tlogowaru Telp. (0341) 754086 Fax. (0341) 754087 <br>
+                http://smkn10-mlg.sch.id E-mail: smkn10_malang@yahoo.co.id <br>
+                MALANG &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                Kode Pos: 65133
+                </p>
+            </div>
+        </div>
+    </div>
+    
+        
+    <div class="mohonMeta">
+        <div class="row" style="padding: 10px 30px">
+            <div class="col-sm-2">
+                <p>
+                    Nomor <br>
+                    Lampiran <br>
+                    Perihal
+                </p>
+                <p>
+                    Kepada <br>
+                    Di Tempat
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <p>
+                    : {{ noSur }} <br>
+                    : 1 Lembar <br>
+                    : Permohonan Praktek Kerja Lapangan
+                </p>
+                <p>
+                    : Yth. Pimpinan <strong>{{ dudi }}</strong>
+                </p>
+            </div>
+            <div class="col-sm-4">Malang, 15 Agustus 2017</div>
+        </div>
+    </div>   
+
+    <div class="mohonIsi">
+        <div class="row">
+            <div class="container-fluid">
+                <p>
+                    Dalam rangka melaksanakan Kebijakan Pemerintah tentang program Pendidikan Sistem Ganda (PSG) untuk siswa SMKmaka setiap siswa SMK Negeri 10 Malang diwajibkan untuk melaksanakan magang/bekerja di Industri atau dunia usaha dalam jangka waktu tertentu. Program magang tersebut disebut dengan istilah Praktik Kerja Lapangan (Prakerlap) dan dilaksanakan dengan ketentuan sebagai berikut:
+                </p>
+                <ul>
+                    <li>Waktu pelaksanaan Praktek Kerja Lapangan (Prakerlap) mulai 1 Januari 2018 s/d  30 Juni 2018.</li>
+                    <li>Jam kerja Prakerlap selama 6 sampai 8 jam setiap hari dan berakhir paling lambat pada jam 17.00 WIB / sesuai shift.</li>
+                </ul>
+                <p>
+                    Sehubungan dengan hal tersebut, kami mohon agar Bapak/Ibu berkenan memberikan ijin dan kesempatan pada siswa kami untuk melaksanakan Prakerlap di tempat kerja Bapak/Ibu.
+                </p>
+                <p>
+                    Selanjutnya kami mohon agar Bapak/Ibu berkenan memberikan jawaban diterima atau tidak diterima atas permohonan kami, melalui lembar balasan (terlampir).
+                </p>
+                <p>
+                    Demikian permohonan kami, atas perhatian dan kerjasamanya disampaikan banyak terima kasih.
+                </p>
+            </div>
+            
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-sm-8">
+                <p>Catatan:</p>
+                <div class="note-box">
+                    <p><strong>Narahubung Prakerlap SMKN 10 Malang:</strong></p>
+                    <ul>
+                        <li>Kepala Program Keahlian {{ proli }} <br>
+                            {{ kaproli }} - <strong>HP. {{ kaproliHp }} </strong>
+                        </li>
+                        <li>Ketua Prakerlap <br>
+                            Luki Emiliya Hidayat, M.Pd - <strong>085755508846</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <p>Kepala Sekolah,</p>
+                <img src="assets/img/ttd-dj.png" alt="TTD" class="ttd"> <br>
+                <p><u>Dwidjo Lelono, S.Pd, MM.Pd</u><br>
+                NIP. 19670220 199103 1 008
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
