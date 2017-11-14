@@ -11,20 +11,18 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="login-box">
-                        <form action="" v-on:submit="onSubmit(login)" role="form">
+                        <form action="" v-on:submit.prevent="onSubmit(login)" role="form">
                             <h4>Masuk Sistem</h4>
                             <div class="alert alert-danger infoError" v-if="loginError">{{ infoError }}</div>
                             <div class="form-group" :class="{'is-waiting': loader}">
                                 <div class="input-group">
-                                    <select name="role" id="role" v-model="login.role" class="form-control">
-                                        <option value="0">Peran Pengguna</option>
-                                        <option value="1"> Administrator </option>
-                                        <option value="2"> Pembimbing </option>
-                                        <option value="3"> Praktikan </option>
-                                        <option value="4"> Tukang </option>
-                                        
+                                    <!-- <label for="role">Pilih Peran Anda!</label> -->
+                                    <select name="role" id="role" class="form-control" v-model="login._role">
+                                        <option value="0">Pilih Peran</option>
+                                        <option v-for="peran in perans" v-bind:value="peran.value">{{peran.text}}</option>
                                     </select>
                                 </div>
+
                                 <br>
                                 <div class="input-group has-addon">
                                     <input type="text" name="username" id="username" v-model="login.username" class="form-control" placeholder="Username/ID">
@@ -44,9 +42,16 @@
                 </div>
             </div>
         </div>
-      
+
+      <div class="row-fluid">
+        <div class="footer">
+          <i class="fa fa-github fa-2x"></i>
+          <i class="fa fa-heart fa-2x"></i>
+          <i class="fa fa-code fa-2x"></i>
+        </div>
+      </div>
     </div>
-  
+
 </template>
 
 <script>
@@ -57,80 +62,74 @@
             return {
                 text: "Insya Allah Manjur!",
                 login: {
-                    username: '',
-                    password: '',
-                    role: '0'
+                    // username: '',
+                    // password: '',
+                    _role: '0'
                 },
-                isAuth: false,
+                // isAuth: false,
                 loader: false,
                 loginError: '',
                 infoError: '',
                 router: '',
-                user: {}
+                user: {},
+                // perans: "0"
             }
 
         },
-        beforeCreate() {
-            if(store.state.isLoggedIn) {
-                router.push('/dashboard')
-                
-            }
+        created() {
+           return this.perans = [
+              //  {value:"0", text: 'Pilih Peran Anda'},
+               {value:"1", text: 'Admnistrator'},
+               {value:"2", text: 'Pembimbing'},
+               {value:"3", text: 'Praktikan'},
+               {value:"4", text: 'Tukang'},
+               ]
         },
         methods: {
-           onSubmit: function(dataLogin){
-               const authUser = {}
-               var app = this;
-               app.loader = true
-               app.loginError = false
-               app.login = {
-                   username : dataLogin.username,
-                   password : dataLogin.password,
-                   role : dataLogin.role
-               };
-               if(app.login.username == ''){
+           async onSubmit(dataLogin) {
+            //    console.log(dataLogin);
+            // let dataLogin = this.dataLogin;
+            this.loader = true;
 
-               }
-               axios.post('/user/authenticate', {
-                   username: this.login.username,
-                   password: this.login.password,
-                   _role: this.login.role
-               })
-               .then(function(res){
-                   if( res.data.error== false) {
+            var self = this;
 
-                       authUser.data = res.data;
-                       authUser.token = res.data.token;
-                       window.localStorage.setItem('token', authUser.token);
-                       app.isAuth = true;
-                       store.commit('LOGIN_USER')
-                       if(authUser.data.role == "Admin"){
-                        //    alert('Admin');
-                           app.$router.push('/dashboard');
-                       }
-                   }else if(res.data.error == true) {
-                       if(res.data.kodeErr == '404') {
-                        //    alert('User tidak ditemukan. Cek kembali username, password dan peran!');
-                           app.login.username = '';
-                           app.login.password = '';
-                        //    app.login.role='0';
-                           app.loader=false;
-                           app.loginError = true;
-                           app.infoError = 'Login Gagal. Cek Username atau Password Anda!';
-                       } else if(res.data.kodeErr == '0') {
-                           app.loginError = true;
-                           app.infoError = 'Tentukan peran Anda Dahulu!';
-                           app.loader = false;
-                       }
-                   }
-               })
-               
+                axios.post('/user/authenticate', dataLogin)
+
+                    .then(function(res){
+
+                        // console.log(res);
+                        let data = res.data;
+                        if(data.error == false){
+                            localStorage.setItem("isLoggedIn", true);
+                            localStorage.setItem("username", data.user._id);
+                            localStorage.setItem("realname", data.user.nama);
+                            localStorage.setItem("token", data.token);
+                            localStorage.setItem("role", data.user._role);
+                            window.location.href = '/dashboard';
+                        } else if(res.data.error == true && res.data.kodeErr == "404"){
+                            return self.loginError = true, self.infoError = res.data.msg;
+
+                        }
+
+                    })
+
+
+            return this.loader = false;
+            this.$router.push('/dashboard');
+            //    this.$router.push('/dashboard');
                event.preventDefault();
            }
+        },
+        computed: {
+            // loader(){
+            //     return this.$store.state.loginPending;
+            // }
+
         }
     }
 </script>
 
-<style lang="scss" type="text/scss">
+<style lang="scss" type="text/scss" scoped>
     .page {
         position: absolute;
         top: 0;
@@ -192,5 +191,14 @@
             transform: translate(-50%, -50%);
             width: 64px;
         }
+    }
+    .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 20px;
+      background: rgba(255,255,255,0.1);
+      color: #efefef;
     }
 </style>

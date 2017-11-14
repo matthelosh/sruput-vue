@@ -2,9 +2,10 @@ let express = require('express'),
     router  = express.Router(),
     jwt     = require('jsonwebtoken'),
     schema  = require('../models/schemas'),
-    User    = schema.User;
-    Siswa   = schema.Peserta;
-    Guru    = schema.Guru;
+    User    = schema.User,
+    Siswa   = schema.Peserta,
+    Guru    = schema.Guru,
+    Log     = schema.Log;
 
     router.post('/signup', function(req, res){
         let user = new User({
@@ -29,76 +30,85 @@ let express = require('express'),
             password: req.body.password,
             _role: req.body._role
         };
+        let d = Date.now;
+        let date = new Date(d);
+        let log = new Log({
+            user: data._id,
+            logStart: date
+        });
+        log.save(function(err, savelog){
+            console.log(savelog);
+        });
         if(data._role == 1){
-            let role = 'Admin';
+            // let role = 'Admin';
             var token = '';
             User.findOne(data).lean().exec(function(err, user){
                 if(err) {
                     return res.json({error: true, msg: err});
                 }
                 if(!user){
-                    return res.json({error: true, kodeErr: '404', msg: 'User tidak ditemukan'});
+                    return res.json({error: true, kodeErr: '404', msg: 'Login Error! Cek kembali data Anda.'});
                 }
                 // console.log(user);
-                serveToken(user, req, res, role);
-                
-               
+                serveToken(user, req, res);
+
+
             });
         }else if(data._role == 2){
-            let role = "Guru";
+            // let role = "Guru";
             Guru.findOne(data).lean().exec(function(err, user){
                 if(err) {
                     return res.json({error: true, msg: err});
                 }
                 if(!user){
-                    return res.json({error: true, kodeErr: '404', msg: 'Pembimbing tidak ditemukan'});
+                    return res.json({error: true, kodeErr: '404', msg: 'Login Error! Cek kembali data Anda.'});
                 }
                 // console.log(user);
-                serveToken(user, req, res, role);
+                serveToken(user, req, res);
             });
         } else if (data._role == 3){
-            let role = "Siswa";
+            // let role = "Siswa";
             Siswa.findOne(data).lean().exec(function(err, user){
                 if(err) {
                     return res.json({error: true, msg: err});
                 }
                 if(!user){
-                    return res.json({error: true, kodeErr: '404', msg: 'Praktikan tidak ditemukan'});
+                    return res.json({error: true, kodeErr: '404', msg: 'Login Error! Cek kembali data Anda.'});
                 }
                 // console.log(user);
-                serveToken(user, req, res, role);
+                serveToken(user, req, res);
             });
         } else if(data._role == 4) {
-            let role = "Tukang";
+            // let role = "Tukang";
             var token = '';
             User.findOne(data).lean().exec(function(err, user){
                 if(err) {
                     return res.json({error: true, msg: err});
                 }
                 if(!user){
-                    return res.json({error: true, kodeErr: '404', msg: 'User tidak ditemukan'});
+                    return res.json({error: true, kodeErr: '404', msg: 'Login Error! Cek kembali data Anda.'});
                 }
                 // console.log(user);
-                serveToken(user, req, res, role);
-                
-               
+                serveToken(user, req, res);
+
+
             });
         } else if (data.role = '0' ) {
-            res.json({error: true, kodeErr: '0', msg: 'Perang Pengguna belum dipilih.'});
+            res.json({error: true, kodeErr: '0', msg: 'Peran Pengguna belum dipilih.'});
         } else {
             let role = 'Tamu';
 
         }
     });
 
-    
+
 
     module.exports = router;
 
 
-function serveToken(user, req, res, role) {
+function serveToken(user, req, res) {
     let token = jwt.sign(user, global.config.sessionSecret, {
-        expiresIn: 1440
+        expiresIn: 18000
     });
-    res.json({error: false, token: token, role: role});
+    res.json({error: false, token: token, user: user});
 }

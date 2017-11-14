@@ -11,6 +11,8 @@ var express = require('express'),
     // api     = require('./api/controllers/index')(router),
     app     = express(),
     path    = require('path');
+
+    // app.use(cors);
     app.use(morgan('dev'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));

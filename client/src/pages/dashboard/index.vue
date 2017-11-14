@@ -1,66 +1,65 @@
 <template>
-  <div v-bind="showUser()">
-      <dash-head v-bind:realname="user.realname"></dash-head>
+  <div>
+      <dash-head v-bind:realname="user"></dash-head>
       <div class="row-fluid">
-        <div class="col-sm-2">
-          <dash-side></dash-side>
-        </div>
-        <div class="col-sm-10">
-          <h1>Main Content</h1>
-          {{user}}
-        </div>
+        <dash-main v-bind:userMon="user" v-bind:isAdmin="Admin" v-bind:namauser="user"></dash-main>
       </div>
+      
   </div>
 </template>
 
 <script>
   import DashHead from './components/header.vue'
-  import DashSide from './components/sidebar.vue'
+  // import DashSide from './components/sidebar.vue'
+  import DashMain from './components/main.vue'
   import store from './../../store/index'
   import axios from 'axios'
+  import router from './../../main'
+  
+
+
+  
     export default {
       data: function() {
         return {
           name: 'dashboard',
-          greet: '',
-          user: '',
-          showUser: function(user){
-            let token = localStorage.getItem('token');
-            axios.get('/protected/me', {headers:{'X-Access-Token': token}}).then(function(res){
-            // console.log(res);
-            return user= 'bogel';
-            });
-          }
-        
+          text: '',
+          user: {},
+          // Admin: '', 
+          token: '',
+
+          
+          
         }
       },
-      beforeCreate(){
-        let token = localStorage.getItem('token');
-        axios.get('/protected', {headers: {'X-Access-Token': token}}).then(function(res){
-          if(res.data.error == true){
-            console.log(res);
-            this.$router.push('/');
-          }
-          
-        });
-        if(!store.state.isLoggedIn) {
+      created: function() {
+        var isLoggedIn = localStorage.getItem("isLoggedIn");
+        if(!isLoggedIn) {
           alert('Sruput kopi, login.. Baru boleh masuk. :)')
           this.$router.push('/')
+        } else {
+          this.$router.push('/dashboard');
+          return this.user = localStorage.getItem("realname");
+          return this.Admin = localStorage.getItem("role");
+          cosole.log(this.Admin);
+          
         }
       },
-      components: {DashHead, DashSide},
+      computed: {
+        Admin(){
+          return localStorage.getItem("role");
+        }
+      },
+      components: {DashHead, DashMain},
       methods: {
-        function(){
-          return this.user.realname= 'Joko'
-        }
         
-      },
-      afterCreate(){
-        alert('halo');
       }
-    }
+    
+  }
 </script>
-
-<style>
-
+<style lang="sass" scoped>
+.side-box
+	padding: 0!important;
+	min-height: 100vh;
+	height: 100vh;
 </style>

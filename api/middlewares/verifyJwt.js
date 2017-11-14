@@ -9,7 +9,7 @@ module.exports = function(req, res, next) {
                 return res.json({"error": true, msg: err});
             }
             req.decoded = decoded;
-            res.json(decoded);
+            // res.json(decoded);
             next();
         });
     } else {

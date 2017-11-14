@@ -64,16 +64,25 @@ var roleSchema = new Schema({
     role: String
 });
 
+var logSchema = new Schema({
+    user: String,
+    logStart: {
+        type: Date
+    }
+})
+
 var User = mongoose.model('User', userSchema, 'users'),
     Peserta = mongoose.model('Peserta', pesertaSchema, 'praktikans'),
     Guru = mongoose.model('Guru', guruSchema, 'gurus'),
     Dudi = mongoose.model('Dudi', dudiSchema, 'dudis'),
-    Role = mongoose.model('Role', roleSchema, 'roles');
+    Role = mongoose.model('Role', roleSchema, 'roles'),
+    Log = mongoose.model('Log', logSchema, 'logs');
 
 module.exports = {
     User: User,
     Guru: Guru,
     Peserta: Peserta,
     Dudi: Dudi,
-    Role: Role
+    Role: Role,
+    Log: Log
 }
