@@ -1,6 +1,8 @@
 let express = require('express'),
     router  = express.Router(),
     jwt     = require('jsonwebtoken'),
+    fs = require('fs'),
+    db = require('./../middlewares/selectDB'),
     schema  = require('../models/schemas'),
     User    = schema.User,
     Siswa   = schema.Peserta,
@@ -24,12 +26,13 @@ let express = require('express'),
         });
     });
 
-    router.post('/authenticate', function(req,res ){
+    router.post('/authenticate', db, function(req,res ){
         let data ={
             _id: req.body.username,
             password: req.body.password,
             _role: req.body._role
         };
+        let periode = req.body.periode;
         let d = Date.now;
         let date = new Date(d);
         let log = new Log({
@@ -37,8 +40,9 @@ let express = require('express'),
             logStart: date
         });
         log.save(function(err, savelog){
-            console.log(savelog);
+            // console.log(savelog);
         });
+        // console.log(periode);
         if(data._role == 1){
             // let role = 'Admin';
             var token = '';

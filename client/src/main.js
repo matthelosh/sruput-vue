@@ -1,14 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-// import BootstrapVue from 'bootstrap-vue'
+import Vuetify from 'vuetify'
+import axios from 'axios'
+Vue.prototype.$http = window.axios
+
+// Object.defineProperty(Vue.prototype, '$bus', {
+//     get(){
+//         return this.$root.bus;
+//     }
+// });
+// let bus = $root.bus;
+let token = localStorage.getItem("token")
+window.axios = axios
+window.axios.defaults.headers.common = {
+  'X-Access-Token': token
+}
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
-// Vue.use(BootstrapVue)
+Vue.use(Vuetify)
+
 
 import store from './store/index.js'
 import App from './app.vue'
+import './../../node_modules/vuetify/dist/vuetify.css'
 import Home from './pages/home.vue'
 import About from './pages/about.vue'
 // import Login from './pages/login.vue'
@@ -90,6 +106,7 @@ Vue.component('app', App)
 new Vue({
     router,
     store,
+    // bus: bus,
     template: '<app></app>'
 
 }).$mount('#app');

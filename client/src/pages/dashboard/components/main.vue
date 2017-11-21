@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-	div.side.col-sm-2
+	div.side.col-sm-2(v-bind:class="sideSlide")
 		.profile
 			span {{namauser}}
 
@@ -39,14 +39,25 @@ div
 </template>
 
 <script>
-
+// import Vue from 'vue'
+// Object.defineProperty(Vue.prototype, '$bus', {
+//     get(){
+//         return this.$root.bus;
+//     }
+// })
     export default{
         data: function(){
             return {
-				name: 'DashMain'
+				name: 'DashMain',
+				sideSlide: 'hideLeft'
             }
 		},
-		props: ['namauser','isAdmin']
+		props: ['namauser','isAdmin'],
+		mounted() {
+			// this.$bus.$on('slideSide', event => {
+			// 	this.sideSlide = event.msg;
+			// });
+		}
     }
 </script>
 
@@ -86,7 +97,17 @@ div
 			&:focus, &:active
 				color: #363679
 
+
 .main
-	margin-left: 16.66666667%;
+	margin-left: 16.66666667%
 	margin-top: 60px
+	// overflow-x: hidden
+
+@media(max-width:767px)
+	.hideLeft
+		left: -50%
+	.showSide
+		position: absolute
+		left: 0!important
+		display: block
 </style>

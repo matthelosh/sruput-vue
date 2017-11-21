@@ -3,14 +3,23 @@
 		<nav class="navbar navbar-sruput navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button class="navbar-toggle">
+					<button type="button" class="navbar-toggle" data-collapse="collapse" data-target="#sruputNavbar">
 						<i class="fa fa-bars"></i>
 					</button>
 					<a href="/" class="navbar-brand"><i class="fa fa-coffee"></i> <span class="hidden-xs">SRUPUT</span></a>
+					
+					<button class="sideToggle" @click="toggleSide">
+						<i class="fa fa-bars"></i>
+					</button>
+					
+				</ul>
 				</div>
-				<div class="navbar-collapse" >
+				
+				<div class="navbar-collapse collapse" id="sruputNavbar">
 					<ul class="nav navbar-nav navbar-left">
-						<li><a href="#"><i class="fa fa-bars"></i></a></li>
+						<li class="navbar-nav nav">
+							<a href="javascript:void(0);">PERIODE: {{ periode }}</a>
+						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 
@@ -25,18 +34,41 @@
 </template>
 
 <script>
+// import Vue from 'vue'
+// Object.defineProperty(Vue.prototype, '$bus', {
+//     get(){
+//         return this.$root.bus;
+//     }
+// })
     export default {
 		props: ['realname'],
         data: function() {
             return {
 				name: 'DashHead',
-
+				collapse: 'collapse',
+				showSide:'',
+				periode: localStorage.getItem("periode")
             }
+		},
+		
+		methods: {
+			
+			toggleSide(){
+				// this.$bus.$emit('slideSide', {
+				// 	msg: 'showSide'
+				// })
+			}
+		},
+		computed: {
+			
 		}
     }
 </script>
 
 <style>
+	.sideToggle{
+		display: none;
+	}
 	.navbar-sruput{
 		border-radius: 0;
 		background: #31363a;
@@ -76,4 +108,22 @@
 		background: rgba(116, 200, 247, 0.6);
 
 	}
+@media (max-width: 767px) {
+	/* .navbar-collapse{
+		display: none;
+	} */
+	.navbar-header{
+		width: auto;
+	}
+	.sideToggle{
+		line-height: 50px;
+		background: none;
+		border: none;
+		outline: none;
+		color: #efefef;
+	}
+	.main{
+		margin-left: auto!important;
+	}
+}
 </style>

@@ -1,4 +1,6 @@
 module.exports = {
-    db: 'mongodb://localhost/sruput',
+    periode: '10-1',
+    baseUrl: 'mongodb://localhost/',
+    
     sessionSecret: 'sruput-vue'
 };

@@ -12,7 +12,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.js'
+            vue: 'vue/dist/vue.js',
+            '@': path.resolve(__dirname, './client/src')
         }
     },
     // module:{
@@ -46,6 +47,10 @@ module.exports = {
 	          loader: "sass-loader"
 	        }]
 	      },
+        {
+          test: /\.css$/,
+          loader: 'css-loader'
+        },
 		  {
 			test: /\.pug$/,
 			loader: 'pug-loader'
@@ -70,6 +75,6 @@ module.exports = {
     //         js: 'babel'
     //     }
     // }
-   
+
 
 }

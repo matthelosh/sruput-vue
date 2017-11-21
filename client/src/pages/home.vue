@@ -2,6 +2,7 @@
     <div class="page">
         <div class="jumbotron">
             <div class="container">
+            
                 <div class="col-sm-8 text-center ">
                     <h1><i class="fa fa-coffee"></i></h1>
                     <h1 class="hidden-xs">SRUPUT</h1>
@@ -17,9 +18,17 @@
                             <div class="form-group" :class="{'is-waiting': loader}">
                                 <div class="input-group">
                                     <!-- <label for="role">Pilih Peran Anda!</label> -->
+                                    <select name="periode" id="periode" class="form-control" v-model="login.periode">
+                                        <option value="0">Pilih Periode</option>
+                                        <option v-for="periode in periodes" v-bind:value="periode.value" :key="periode.value">{{periode.text}}</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                    <!-- <label for="role">Pilih Peran Anda!</label> -->
                                     <select name="role" id="role" class="form-control" v-model="login._role">
                                         <option value="0">Pilih Peran</option>
-                                        <option v-for="peran in perans" v-bind:value="peran.value">{{peran.text}}</option>
+                                        <option v-for="peran in perans" v-bind:value="peran.value" :key="peran.value">{{peran.text}}</option>
                                     </select>
                                 </div>
 
@@ -64,14 +73,24 @@
                 login: {
                     // username: '',
                     // password: '',
+                   periode: '0',
                     _role: '0'
                 },
+                
+                periodes: [],
+                
                 // isAuth: false,
                 loader: false,
                 loginError: '',
                 infoError: '',
                 router: '',
                 user: {},
+                periodes : [
+                {value: '10-1', text: '10.1'},
+                {value: '10-2', text: '10.2'}
+                // {value: '11-1', text: '11.1'},
+                // {value: '11-2', text: '11.2'}
+                ]
                 // perans: "0"
             }
 
@@ -83,17 +102,23 @@
                {value:"2", text: 'Pembimbing'},
                {value:"3", text: 'Praktikan'},
                {value:"4", text: 'Tukang'},
-               ]
+               ];
+            // return this.periodes = [
+            //     {value: '10-1', text: '10.1'},
+            //     {value: '10-2', text: '10.2'},
+            //     {value: '11-1', text: '11.1'},
+            //     {value: '11-2', text: '11.2'}
+            // ];
         },
         methods: {
            async onSubmit(dataLogin) {
-            //    console.log(dataLogin);
+               console.log(dataLogin);
             // let dataLogin = this.dataLogin;
             this.loader = true;
 
             var self = this;
-
-                axios.post('/user/authenticate', dataLogin)
+            localStorage.setItem("periode", dataLogin.periode);
+                axios.post('http://localhost:3456/user/authenticate', dataLogin)
 
                     .then(function(res){
 
@@ -105,6 +130,7 @@
                             localStorage.setItem("realname", data.user.nama);
                             localStorage.setItem("token", data.token);
                             localStorage.setItem("role", data.user._role);
+                            
                             window.location.href = '/dashboard';
                         } else if(res.data.error == true && res.data.kodeErr == "404"){
                             return self.loginError = true, self.infoError = res.data.msg;

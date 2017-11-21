@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     Schema   = mongoose.Schema;
-    
+
 var userSchema = new Schema({
     _id: String,
     realname: String,
@@ -17,7 +17,7 @@ var pesertaSchema = new Schema({
     _id: String,
     password: String,
     periode: String,
-    namaPeserta: String,
+    nama: String,
     progli: String,
     hp: String,
     _guru: {
@@ -26,11 +26,13 @@ var pesertaSchema = new Schema({
     },
     _dudi: {
         type: String,
-        ref: 'Dudi'
+        ref: 'Dudi',
+        default: '0'
     },
     _role: {
         type: Number,
-        ref: 'Role'
+        ref: 'Role',
+        default: 3
     }
 });
 
@@ -42,11 +44,13 @@ var guruSchema = new Schema({
     hp: String,
     _dudi: {
         type: String,
-        ref: 'Dudi'
+        ref: 'Dudi',
+        default: '0'
     },
     _role: {
         type: String,
-        ref: 'Role'
+        ref: 'Role',
+        default: 1
     }
 });
 

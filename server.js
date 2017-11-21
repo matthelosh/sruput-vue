@@ -1,7 +1,7 @@
 var express = require('express'),
     port    = process.env.PORT || 3456,
     cors    = require('cors'),
-    db      = require('./cfg/db'),
+    // db      = require('./cfg/db'),
     morgan  = require('morgan'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
