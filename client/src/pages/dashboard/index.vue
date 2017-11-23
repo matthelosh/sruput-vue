@@ -14,7 +14,7 @@
   import DashMain from './components/main.vue'
   import store from './../../store/index'
   import tokenService from './../../lib/cekToken'
-  import axios from 'axios'
+  // import axios from 'axios'
   import router from './../../main'
 
 

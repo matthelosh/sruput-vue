@@ -12,9 +12,8 @@ div
         .card-header.top-bordered.border-green
           .container
             .col-sm-6
-              h3
-                i.fa.fa-users &nbsp;
-                | Data <small> Praktikan </small>
+              h4 Data <small> Praktikan </small> &nbsp;
+                i.fa.fa-users 
             .col-sm-4.col-sm-offset-1
               .input-group.has-addon
                 input.form-control(v-model="cari", placeholder="Nama Siswa")
@@ -28,8 +27,9 @@ div
                   th No
                   th ID
                   th Nama
-                  th Periode
+                  th Progli
                   th Nama Dudi
+                  th Pembimbing
                   th Status
                   th Aksi
               tbody
@@ -37,8 +37,9 @@ div
                   td {{index+1}}
                   td {{ praktikan._id}}
                   td {{praktikan.nama}}
-                  td {{praktikan.periode}}
+                  td {{praktikan.progli | uppercase }}
                   td {{ praktikan._dudi}}
+                  td {{ praktikan._guru}}
                   td {{ praktikan.hp}}
                   td Edit
 
@@ -87,21 +88,21 @@ div
           div(v-show="siswa")
             p.text-center Calon Praktikan:
             h4.text-center {{siswa.nama}} <br /> <small> HP.: {{siswa.hp}} </small>
-          form.form#frmTempatkan(v-on:submit.prevent='tempatkan')
+          form.form#frmTempatkan(v-on:submit.prevent='tempatkan(siswa)')
             .form-group
               label(for="nis") Kode Peserta Prakerlap (huruf u+ Digit depan NIS)
               .input-group.has-addon
                 
-                input.form-control#nis(name="nisTempat" placeholder="Masukkan NIS dengan format u+digit angka sebelum garis miring.", v-model="nisTempat", v-on:keyup.13="cariSiswa(nisTempat)")
-                span.input-group-addon.tbl(@click="cariSiswa(nisTempat)")
+                input.form-control#nis(name="nisTempat" placeholder="Masukkan NIS dengan format u+digit angka sebelum garis miring.", v-model="siswa.nisTempat")
+                span.input-group-addon.tbl(@click="cariSiswa(siswa.nisTempat)")
                   i.fa.fa-search
             div(v-if="siswa")
               .form-group.dudiauto
                 label(for="autocomplete") Nama DU/DI
-                | <autocomplete id="dudiTempat" v-model="dudiTempat" v-bind="dudiTempat" name="dudi" class="form-auto" :placeholder="placeholder" :customHeaders="headers" size="100" url="/protected/namaDudi" :on-select="getData" anchor="_id" label="namaDudi" :min="1"></autocomplete>
+                | <autocomplete id="dudiTempat" v-model="siswa._dudi" v-bind="dudiTempat" name="dudi" class="form-auto" :placeholder="placeholder" :customHeaders="headers" size="100" url="/protected/namaDudi" :on-select="getData" anchor="_id" label="namaDudi" :min="1" v-bind:value="siswa._dudi"></autocomplete>
               .form-group.guruauto
                 label(for="guru") Guru Pembmbing
-                autocomplete#guruTempat(v-model="guruTempat" v-bind="guruTempat" name="guru" :placeholder="guruplaceholder" :customHeaders="headers" url="/protected/gurus" :on-select="getData" anchor="_id" label="nama" :min="1")
+                autocomplete#guruTempat(v-model="siswa._guru" v-bind="guruTempat" name="guru" :placeholder="guruplaceholder" :customHeaders="headers" url="/protected/gurus" :on-select="getGuru" anchor="_id" label="nama" :min="1")
               .form-group
                 button.btn.flat.btn-primary.center-block(type="submit") Tempatkan
 
@@ -136,9 +137,8 @@ export default {
       addSiswaInfo : '',
       nama: "Sruput Kopi Dulu",
 
-      nisTempat: '',
+      siswa: {nisTempat: ''},
       nisMutasi: '',
-      siswa: '',
       dudi: {},
       dudis:'',
       pilDudi:'',
@@ -155,7 +155,7 @@ export default {
     this.getPraktikans();
   },
   filters: {
-    lowercase: function(value){return value.toLowerCase();}
+    uppercase: function(value){return value.toUpperCase();}
   },
   methods: {
     addSiswa(newSiswa){
@@ -175,7 +175,7 @@ export default {
         return false;
       }else {
         console.log(newSiswa);
-        axios.post('/protected/praktikan',  newSiswa)
+        axios.post('/protected/praktikan', {headers: {'X-Access-Token': token}}, newSiswa)
             .then(res=>{
               if(res.data.code == 11000){
                 self.addSiswaInfo = res.data.errmsg;
@@ -195,7 +195,7 @@ export default {
     getPraktikans() {
       var self = this;
       var token = self.token;
-      axios.get('/protected/praktikans')
+      axios.get('/protected/praktikans',{headers: {'X-Access-Token': token}})
           .then(res=>{
             self.praktikans = res.data;
           });
@@ -203,7 +203,7 @@ export default {
     cariSiswa(nis) {
       var self = this;
       var token = self.token;
-      axios.get('/protected/praktikan/detil/'+ nis)
+      axios.get('/protected/praktikan/detil/'+ nis, {headers: {'X-Access-Token': token}})
             .then(res => {
               if(res.data.data == "No Data"){
                 self.siswa = {
@@ -211,6 +211,7 @@ export default {
                 }
               } else {
                 self.siswa = res.data[0];
+                self.siswa.nisTempat = res.data[0]._id;
               }
 
             })
@@ -218,26 +219,27 @@ export default {
     }, cariDudi(dudi){
       var self = this;
       var token = self.token;
-      axios.get('/protected/namaDudi/'+ dudi)
+      axios.get('/protected/namaDudi/'+ dudi, {headers: {'X-Access-Token': token}})
             .then(res => {
               // console.log(res);
               self.dudis = res.data;
             });
     },
-    tempatkan(){
+    tempatkan(siswa){
+      var self = this;
       let tempatkanFrm = document.getElementById("frmTempatkan");
-      
-      let nis = document.getElementById("nis").value;
-      let dudi = document.getElementById("dudiTempat").value;
-      let guru = document.getElementById("guruTempat").value;
+      var token = self.token;
+      let nis = siswa._id;
+      // let dudi = document.getElementById("dudiTempat").value;
+      // let guru = document.getElementById("guruTempat").value;
       // formData.append('')
-      let Data = ({
-        _id: nis,
-        _dudi: dudi,
-        _guru: guru
-      });
-      console.log(Data);
-      axios.post('/protected/updPraktikan?nis='+nis, Data)
+      // let Data = ({
+      //   _id: nis,
+      //   _dudi: dudi,
+      //   _guru: guru
+      // });
+      console.log(siswa._dudi);
+      axios.post('/protected/updPraktikan/'+nis, siswa, {headers: {'X-Access-Token': token}})
           .then(res=>{
             console.log(res);
           });
@@ -249,14 +251,24 @@ export default {
       return response.data.items
     },
     getData(obj) {
-      // console.log(obj);
+      // return obj.data._id;
+      var self = this;
+      self.siswa._dudi = obj._id;
+      
+    },
+    getGuru(obj) {
+      var self = this;
+      self.siswa._guru = obj._id;
     }
   },
   computed: {
     praktikansFiltered: function(){
       var self = this;
+      
       return this.praktikans.filter(function(prak){
+        
         return prak.nama.toLowerCase().indexOf(self.cari.toLowerCase())>=0;
+        
       })
     },
     headers(){

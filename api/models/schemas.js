@@ -58,8 +58,9 @@ var dudiSchema = new Schema({
     _id: String,
     namaDudi: String,
     alamat: String,
-    kontak: String,
-    telp: String
+    kota: String,
+    telp: String,
+    _guru: String
 });
 
 var roleSchema = new Schema({
@@ -73,14 +74,24 @@ var logSchema = new Schema({
     logStart: {
         type: Date
     }
-})
+});
+
+var jadwalSchema= new Schema({
+    monKe: String,
+    start: Date,
+    end: Date,
+    kegiatan: String,
+    pelaksana: String,
+    tempat: String
+});
 
 var User = mongoose.model('User', userSchema, 'users'),
     Peserta = mongoose.model('Peserta', pesertaSchema, 'praktikans'),
     Guru = mongoose.model('Guru', guruSchema, 'gurus'),
     Dudi = mongoose.model('Dudi', dudiSchema, 'dudis'),
     Role = mongoose.model('Role', roleSchema, 'roles'),
-    Log = mongoose.model('Log', logSchema, 'logs');
+    Log = mongoose.model('Log', logSchema, 'logs'),
+    Jadwal = mongoose.model('Jadwal', jadwalSchema, 'jadwals');
 
 module.exports = {
     User: User,
@@ -88,5 +99,6 @@ module.exports = {
     Peserta: Peserta,
     Dudi: Dudi,
     Role: Role,
-    Log: Log
+    Log: Log,
+    Jadwal: Jadwal
 }

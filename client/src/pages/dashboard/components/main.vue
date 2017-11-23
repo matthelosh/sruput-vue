@@ -1,7 +1,7 @@
 <template lang="pug">
 div
 	div.side.col-sm-2(v-bind:class="sideSlide")
-		.profile
+		.profile(v-bind:style="{ 'background-image':'url('+image+')'}")
 			span {{namauser}}
 
 		ul.nav.sidebar-nav(v-if="isAdmin == 1")
@@ -15,6 +15,8 @@ div
 				router-link(to="/dudi") DU/DI
 			li.nav
 				router-link(to="/praktikan") Praktikan
+			li.nav
+				router-link(to="/jadwal") Jadwal Prakerlap
 		ul.nav.sidebar-nav(v-else-if="isAdmin == 2")
 			li.nav
 				a(href="/dashboard") Home
@@ -22,13 +24,15 @@ div
 				router-link(to="/monitoring") Monitoring
 			li.nav
 				a(href="#") Pengajuan Prakerlap
+			li.nav
+				router-link(to="/jadwal") Jadwal Prakerlap
 		ul.nav.sidebar-nav(v-else-if="isAdmin == 3")
 			li.nav
 				a(href="/dashboard") Home
 			li.nav
 				a(href="#") Mendaftar Prakerlap
 			li.nav
-				a(href="#") Jadwal Kegiatan Prakerlap
+				router-link(to="/jadwal") Jadwal Prakerlap
 		ul.nav.sidebar-nav
 			li.nav
 				a(href="/logout")
@@ -49,7 +53,11 @@ div
         data: function(){
             return {
 				name: 'DashMain',
-				sideSlide: 'hideLeft'
+				sideSlide: 'hideLeft',
+				url: 'url',
+				user : localStorage.getItem("username"),
+				image: './../../../../dist/assets/img/profil/'+localStorage.getItem("username")+'.jpg'
+				
             }
 		},
 		props: ['namauser','isAdmin'],
@@ -57,6 +65,13 @@ div
 			// this.$bus.$on('slideSide', event => {
 			// 	this.sideSlide = event.msg;
 			// });
+		},
+		computed: {
+			background(){
+				// var url = 'url';
+				var user = localSotrage.getItem("username");
+				return "url('./../../../../dist/assets/img/avatar.jpg')";
+			}
 		}
     }
 </script>
@@ -72,11 +87,16 @@ div
 	.profile
 		min-height: 200px
 		background:
-			image: url('./../../../../dist/assets/img/avatar.jpg')
+			position: center center
 			size: 100%
 		box-sizing: border-box
 		// padding: 20px
 		position: relative
+		transition: all .35s ease-in-out
+		&:hover
+			cursor: pointer
+			filter: saturate(60%) sepia(10%)
+			background-size: 110%
 		span
 			position: absolute
 			bottom: 0

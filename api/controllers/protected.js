@@ -6,6 +6,7 @@ let express = require('express'),
 var Praktikan = models.Peserta;
 var Dudi= models.Dudi;
 var Guru = models.Guru;
+var Jadwal = models.Jadwal;
 
     router.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", 'http://localhost:3456');
@@ -23,9 +24,15 @@ var Guru = models.Guru;
     });
 
     router.get('/gurus', (req, res) => {
+        Guru.find({}, (err, gurus) => {
+            if (err) res.json(err)
+            else res.json(gurus);
+        })
+    });
+    router.get('/gurus', (req, res) => {
         let namaGuru = req.query.q;
         let regex  = new RegExp(namaGuru, "i");
-        Guru.find({"nama": regex}, function(err, gurus){
+        Guru.find({"nama": regex}, (err, gurus) => {
           if(err) res.json(err);
           else res.json(gurus);
         })
@@ -85,20 +92,22 @@ var Guru = models.Guru;
     });
 
     router.get('/praktikan/:nis', function(req, res){
-      cosole.log(req.params.nis);
+    //   cosole.log(req.params.nis);
         var nis = req.params.nis;
-        console.log(nis);
+        // console.log(nis);
         Praktikan.find({"_id": "u4396"}, function(err, praktikan){
             if(err) res.json(err);
             else res.json(praktikan);
         });
     });
 
-    router.post('/updPraktikan', (req, res) => {
-        var nis = req.query.nis;
+    router.post('/updPraktikan/:nis', (req, res) => {
+        var nis = req.params.nis;
+        console.log(req.body);
         Praktikan.update({_id: nis}, {$set:{_guru: req.body._guru, _dudi: req.body._dudi}}, function(err, saved){
             if (err) res.json(err)
-            else res.json({"success": true, msg: "Data Praktikan :" + nis + "berhasil ditempatkan di dudi :"+req.body_dudi });
+            // console.log(saved);
+            else res.json({"success": true, msg: "Data Praktikan :" + nis + "berhasil ditempatkan di dudi :"+req.body._dudi });
         })
     })
 
@@ -125,13 +134,59 @@ var Guru = models.Guru;
       })
     });
 
+    router.get('/kodeDudi/:kode', function(req, res){
+        var kode = req.params.kode;
+        var regex = new RegExp(kode, "i");
+        Dudi.find({_id: regex}).sort({_id:-1}).limit(1)
+            .exec(function(err, kodeDudi){
+                if(err) res.json(err)
+                else res.json(kodeDudi)
+            });
+    });
+
+    router.post('/addDudi', (req, res) => {
+        var dudi = new Dudi({
+            _id: req.body._id,
+            namaDudi: req.body.namaDudi,
+            alamat: req.body.alamat,
+            telp: req.body.telp,
+            kota: req.body.kota
+        });
+        // console.log(req.body.kota);
+        dudi.save(function(err, saved){
+            if(err) res.json(err)
+            else res.json({"success": true, "msg": "Dudi :" + dudi.namaDudi + " berhasil disimpan."});
+        });
+    });
 
     // Prakerlap API
     router.get('/prakerlap', (req, res) => {
         res.send('Prakerlap API');
     });
 
+// Jadwal API
+    router.post('/addJadwal', (req, res)=>{
+        var jadwal = new Jadwal({
+            monKe : req.body.monKe,
+            start: req.body.start,
+            end: req.body.end,
+            kegiatan: req.body.kegiatan,
+            pelaksana: req.body.pelaksana,
+            tempat: req.body.tempat
+        });
 
+        jadwal.save((err, saved)=>{
+            if (err) res.json(err)
+            res.json({'success': true, 'msg': 'Jadwal Berhasil ditambahkan'});
+        })
+    });
+    router.get('/jadwals', (req, res)=>{
+        Jadwal.find({}).sort({_id: 1})
+            .exec((err, jadwals)=>{
+            if (err) res.json(err)
+            res.json(jadwals);
+        })
+    })
 
  
     module.exports = router;

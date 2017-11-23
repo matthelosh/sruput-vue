@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import Vuetify from 'vuetify'
-import axios from 'axios'
-Vue.prototype.$http = window.axios
+// import axios from 'axios'
+// Vue.prototype.$http = window.axios
 
 // Object.defineProperty(Vue.prototype, '$bus', {
 //     get(){
@@ -11,11 +11,11 @@ Vue.prototype.$http = window.axios
 //     }
 // });
 // let bus = $root.bus;
-let token = localStorage.getItem("token")
-window.axios = axios
-window.axios.defaults.headers.common = {
-  'X-Access-Token': token
-}
+// let token = localStorage.getItem("token")
+// window.axios = axios
+// window.axios.defaults.headers.common = {
+//   'X-Access-Token': token
+// }
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -39,7 +39,7 @@ import Pembimbing from './pages/dashboard/components/pembimbing.vue'
 import Praktikan from './pages/dashboard/components/praktikan.vue'
 import Dudi from './pages/dashboard/components/dudi.vue'
 import Prakerlap from './pages/dashboard/components/prakerlap.vue'
-
+import Jadwal from './pages/dashboard/components/jadwal.vue'
 const router = new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -83,6 +83,10 @@ const router = new VueRouter({
                 {
                     path: '/prakerlap',
                     component: Prakerlap
+                },
+                {
+                    path: '/jadwal',
+                    component: Jadwal
                 }
 
             ]
@@ -96,6 +100,11 @@ const router = new VueRouter({
             path: '/logout',
             name: 'logout',
             component: Logout
+        },
+        {
+            path: '*',
+            name: 'notFound',
+            template: '<h1>Kami tidak menemukan yang Anda Cari.</h1>'
         }
     ]
 })
