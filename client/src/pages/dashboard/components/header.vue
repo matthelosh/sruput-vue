@@ -1,39 +1,34 @@
-<template>
-    <div>
-		<nav class="navbar navbar-sruput navbar-fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-collapse="collapse" data-target="#sruputNavbar">
-						<i class="fa fa-bars"></i>
-					</button>
-					<a href="/" class="navbar-brand"><i class="fa fa-coffee"></i> <span class="hidden-xs">SRUPUT</span></a>
+<template lang="pug">
+	div
+		nav.navbar.navbar-sruput.navbar-fixed-top
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle.sideToggle(@click="toggleSide")
+						i.fa.fa-bars
 					
-					<button class="sideToggle" @click="toggleSide">
-						<i class="fa fa-bars"></i>
-					</button>
-					
-				</ul>
-				</div>
-				
-				<div class="navbar-collapse collapse" id="sruputNavbar">
-					<ul class="nav navbar-nav navbar-left">
-						<li class="navbar-nav nav">
-							<a href="javascript:void(0);">PERIODE: {{ periode }}</a>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-
-						<li><a href="#"><i class="fa fa-user"></i> <span class="hidden-xs">{{realname}}</span></a></li>
-
-						<li><a href="/logout"><i class="fa fa-sign-out"></i></a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</div>
+					a(href="/" class="navbar-brand") 
+						i.fa.fa-coffee <span class="hidden-xs"> SRUPUT</span>
+					p.navbar-title.visible-xs {{realname}}
+				.navbar-collapse.collapse#sruputNavbar
+					ul.nav.navbar-nav.navbar-left
+						li.navbar-nav.nav
+							a(href="javascript:void(0);") PERIODE: {{ periode }}
+						
+					ul.nav.navbar-nav.navbar-right
+						li
+							a(href="javascript:void(0)") 
+								i.fa.fa-user &nbsp;
+								|{{ realname }}
+								span.profil Halo Semua
+						li
+							router-link.exit(to="/logout")
+								i.fa.fa-power-off
+						li
+							a(href="javascript:void(0)") 
 </template>
 
 <script>
+import eventHub from './../../../main'
 // import Vue from 'vue'
 // Object.defineProperty(Vue.prototype, '$bus', {
 //     get(){
@@ -48,27 +43,44 @@
 				collapse: 'collapse',
 				showSide:'',
 				periode: localStorage.getItem("periode")
+				// realname: localStorage.getItem("realname")
             }
+		},
+		created(){
+
 		},
 		
 		methods: {
 			
 			toggleSide(){
-				// this.$bus.$emit('slideSide', {
-				// 	msg: 'showSide'
-				// })
+				this.eventHub.$emit('toggleSide', 'show');
 			}
 		},
 		computed: {
-			
+			isAdmin(){
+				return localStorage.getItem("role");
+			}
 		}
     }
 </script>
 
 <style>
-	.sideToggle{
+	.navbar-title{
+		line-height: 60px;
+		color: #efefef;
+		text-transform: uppercase;
+		margin: 0!important;
+		text-align: center;
+	}
+	.navbar-brand{
+		margin-left: 0!important;
+		/* line-height: 50px; */
+
+	}
+	.collapse{
 		display: none;
 	}
+	
 	.navbar-sruput{
 		border-radius: 0;
 		background: #31363a;
@@ -105,8 +117,27 @@
 		color: #efefef!important;
 	}
 	.nav > li >  a:hover {
-		background: rgba(116, 200, 247, 0.6);
+		background: #017582;;
+		color: #efefef!important;
 
+	}
+	.navbar-collapse ul li a span.profil{
+		display: none;
+		position: absolute;
+		background: #017582;
+		left: 0;
+		color: #efefef!important;
+		top: -200%;
+		width: 100%;
+		box-sizing: border-box;
+		padding: 10px;
+		opacity: 0;
+		transition: position 0.35s linear;
+	}
+	.navbar-collapse ul li a:hover span.profil{
+		display: block;
+		top: 100%;
+		opacity: 1;
 	}
 @media (max-width: 767px) {
 	/* .navbar-collapse{
@@ -115,8 +146,11 @@
 	.navbar-header{
 		width: auto;
 	}
+	.navbar-brand{
+		padding: 20px 5px 0 30px!important;
+	}
 	.sideToggle{
-		line-height: 50px;
+		/* line-height: 50px; */
 		background: none;
 		border: none;
 		outline: none;

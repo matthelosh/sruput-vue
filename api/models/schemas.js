@@ -77,7 +77,7 @@ var logSchema = new Schema({
 });
 
 var jadwalSchema= new Schema({
-    monKe: String,
+    _id: String,
     start: Date,
     end: Date,
     kegiatan: String,

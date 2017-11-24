@@ -16,6 +16,14 @@ import Vuetify from 'vuetify'
 // window.axios.defaults.headers.common = {
 //   'X-Access-Token': token
 // }
+const eventHub = new Vue()
+Vue.mixin({
+    data: function(){
+        return {
+            eventHub: eventHub
+        }
+    }
+})
 
 Vue.use(VueRouter)
 Vue.use(Vuex)

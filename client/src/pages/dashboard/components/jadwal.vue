@@ -16,9 +16,9 @@
                             th Pelaksana
                             th Lokasi
                     tbody
-                        tr(v-for="(jadwal, index) in jadwals")
+                        tr(v-for="(jadwal, index) in jadwals" :class="[isNow ? tandai:'']" )
                             td {{index+1}}
-                            td {{jadwal.start | formatDate}} - {{jadwal.end | formatDate}}
+                            td.tgl {{jadwal.start | formatDate }} - {{jadwal.end | formatDate}}
                             td {{ jadwal.kegiatan}}
                             td {{ jadwal.pelaksana}}
                             td {{ jadwal.tempat}}
@@ -29,7 +29,7 @@
                 hr
                 form.form(v-on:submit.prevent="addJadwal(jadwal)")
                     .form-group
-                        input.form-control#monKe(type="text" v-model="jadwal.monKe" placeholder="Monitoring Ke N / Kegiatan")
+                        input.form-control#monKe(type="text" v-model="jadwal.monKe" placeholder="No.Urut")
                     .form-group
                         input.form-control#start(type="datetime-local" v-model="jadwal.start" placeholder="Tanggal Mulai")
                     .form-group
@@ -53,12 +53,15 @@ export default {
           mode: '',
           jadwal: {},
           token : localStorage.getItem("token"),
-          jadwals: []
+          jadwals: [],
+          isNow: false,
+          tgl : 'tgl'
           
       }
   },
   created(){
       this.getJadwals();
+    //   this.cekTanggal();
   },
   computed: {
       periode(){
@@ -75,10 +78,15 @@ export default {
   },
   filters: {
       formatDate: function(date){
-          return moment(date).format('DD MMMM YYYY');
+        return moment(date).format('DD MMMM YYYY H:m:s a');
+      },
+      selcted: function(text){
+          return date.toUpperCase();
       }
+      
   },
   methods: {
+      
       toggleMode(mode){
           var self= this;
           self.mode = mode;
@@ -86,6 +94,7 @@ export default {
       addJadwal(jadwal){
         var self = this;
         var token = self.token;
+        console.log(jadwal);
         axios.post('/protected/addJadwal', jadwal, {headers: {'X-Access-Token': token}})
             .then(res=>{
                 if(res.data.success == true) {
@@ -112,9 +121,19 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
+.tandai
+    background: #987590
+    color: #363636
 .flat
     border-radius: 0!important
+
 th
     text-align: center
     text-transform: uppercase
+thead > tr
+    background: #aabdd0
+    color: #efefef
+tbody > tr:nth-of-type(even)
+    background: #57bdd0
+    color: #efefef
 </style>

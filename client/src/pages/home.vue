@@ -118,7 +118,7 @@
 
             var self = this;
             localStorage.setItem("periode", dataLogin.periode);
-                axios.post('http://localhost:3456/user/authenticate', dataLogin)
+                axios.post('/user/authenticate', dataLogin)
 
                     .then(function(res){
 

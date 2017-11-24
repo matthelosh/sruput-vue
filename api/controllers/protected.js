@@ -167,7 +167,7 @@ var Jadwal = models.Jadwal;
 // Jadwal API
     router.post('/addJadwal', (req, res)=>{
         var jadwal = new Jadwal({
-            monKe : req.body.monKe,
+            _id : req.body.monKe,
             start: req.body.start,
             end: req.body.end,
             kegiatan: req.body.kegiatan,
@@ -180,13 +180,12 @@ var Jadwal = models.Jadwal;
             res.json({'success': true, 'msg': 'Jadwal Berhasil ditambahkan'});
         })
     });
-    router.get('/jadwals', (req, res)=>{
-        Jadwal.find({}).sort({_id: 1})
-            .exec((err, jadwals)=>{
-            if (err) res.json(err)
+    router.get('/jadwals', function(req, res){
+        Jadwal.find({}, function(err, jadwals){
+            if (err) {res.json(err);}
             res.json(jadwals);
-        })
-    })
+        });
+    });
 
  
     module.exports = router;
