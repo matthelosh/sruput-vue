@@ -1,7 +1,7 @@
 <template>
   <div>
-      <div :class="{'is-waiting': loader}">
-          <h1>Keluar Sistem ..</h1>
+      <div class="text-center msg" :class="{'is-waiting': loader}">
+          <h1>Keluar Sistem</h1>
           <h3><small>{{pesan}}</small></h3>
 
       </div>
@@ -10,13 +10,25 @@
 
 <script>
 import router from './../../main.js'
-import store from './../../store/index.js'
+// import store from './../../store/index.js'
 export default {
     data: function(){
-        return {loader: false, pesan: 'Tunggu Sebentar'}
+        return {loader: false, pesan: 'Tunggu Sebentar, ya..'}
     },
-    beforeCreate(){
-        this.loader = false;
+    // beforeCreate(){
+    //     // this.loader = false;
+    //     // localStorage.removeItem('token');
+    //     // localStorage.removeItem('isLoggedIn');
+    //     // localStorage.removeItem('dudi');
+    //     // localStorage.removeItem('namaDudi');
+    //     // localStorage.removeItem('role');
+    //     // localStorage.removeItem('username');
+    //     // localStorage.removeItem('realname');
+    // },
+    name: 'logout',
+    created() {
+        this.loader = true
+        var self = this;
         localStorage.removeItem('token');
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('dudi');
@@ -24,21 +36,26 @@ export default {
         localStorage.removeItem('role');
         localStorage.removeItem('username');
         localStorage.removeItem('realname');
-    },
-    name: 'logout',
-    created() {
-        this.loader = true
-
+        localStorage.removeItem('periode');
+        setTimeout(function(){
+            self.$router.push('/')
+        }, 1500);
 
         // this.loader = false
-        this.$router.push('/')
+        
     }
 }
 </script>
 <style lang="scss" type="text/scss" scoped>
+.msg{
+    position: absolute;
+    color: orangered;
+    z-index: 10;
+    top: 100px;
+}
 .is-waiting {
-        position: fixed;
-        background: black;
+        position: absolute;
+        background: #eee;
         top: 0;
         right: 0;
         bottom: 0;

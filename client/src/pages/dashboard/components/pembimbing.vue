@@ -3,6 +3,8 @@ div
   .well
     h1 Menu <small>Pembimbing</small>
     .btn-group
+      button.btn.flat.text-center.root-menu.dark(@click="toggleMode('asli')")
+        i.fa.fa-ellipsis-v
       button.btn.btn-flat.btn-guru1(@click="toggleMode('addGuru')") Tambah Guru
       button.btn.btn-flat.btn-guru2(@click="toggleMode('bagiDudi')") Tentukan Du/DI
   .row-fluid
@@ -39,44 +41,52 @@ div
                   td {{ guru._dudi }}
 
 </template>
+
 <script>
-import axios from 'axios'
-export default {
-  name: "Pembimbing",
-  data: () => ({
-    mode: 'asli',
-    gurus: [],
-    token: localStorage.getItem("token"),
-    cari: ''
-  }),
-  created(){
-    this.getGurus();
-  },
-  methods: {
-    toggleMode(mode){
-      var self= this;
-      self.mode = mode;
+  import axios from 'axios'
+  export default {
+    name: "Pembimbing",
+    data: () => ({
+      mode: 'asli',
+      gurus: [],
+      token: localStorage.getItem("token"),
+      cari: ''
+    }),
+    created() {
+      this.getGurus();
     },
-    getGurus(){
-      var self = this;
-      var token = self.token;
-      axios.get('/protected/gurus', {headers: {'X-Access-Token': token}})
-            .then(res => {
-              self.gurus = res.data;
-            })
-    }
-  },
-  computed: {
-    gurusFiltered(){
-      var self = this;
+    methods: {
+      toggleMode(mode) {
+        var self = this;
+        self.mode = mode;
+      },
+      getGurus() {
+        var self = this;
+        var token = self.token;
+        axios.get('/protected/gurus', {
+            headers: {
+              'X-Access-Token': token
+            }
+          })
+          .then(res => {
+            self.gurus = res.data;
+          })
+      }
+    },
+    computed: {
+      gurusFiltered() {
+        var self = this;
         return this.gurus.filter((guru) => {
           return guru.nama.toLowerCase().indexOf(self.cari.toLowerCase()) >= 0;
         })
+      }
     }
   }
-}
 </script>
+
 <style lang="sass" scoped>
+.root-menu
+  background: #45645a
 .btn-flat
   border-radius: 0!important
   color: #efefef
@@ -87,6 +97,7 @@ export default {
   background: #46bb3a
 .btn-guru2
   background: #3e9835
-  
+.dark
+  color: #efefef
 
 </style>

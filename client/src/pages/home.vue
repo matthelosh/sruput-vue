@@ -11,7 +11,7 @@
                     <p class="hidden-xs">{{ text }}</p>
                 </div>
                 <div class="col-sm-4">
-                    <div class="login-box">
+                    <div class="login-box" style="z-index: 10">
                         <form action="" v-on:submit.prevent="onSubmit(login)" role="form">
                             <h4>Masuk Sistem</h4>
                             <div class="alert alert-danger infoError" v-if="loginError">{{ infoError }}</div>
@@ -47,16 +47,19 @@
                                 <button class="btn btn-primary btn-flat" type="submit">Masuk</button>
                             </div>
                         </form>
+                        Belum terdaftar? <router-link to="/daftar" title="Hanya untuk Calon Peserta">Daftar</router-link><span><sup><i class="fa fa-info-circle" style="color: blue"></i></sup></span>. Pembimbing, hubungi operator!
                     </div>
+
                 </div>
             </div>
         </div>
 
-      <div class="row-fluid">
+      <div class="row-fluid" style="z-index: 5!important">
         <div class="footer">
           <i class="fa fa-github fa-2x"></i>
           <i class="fa fa-heart fa-2x"></i>
           <i class="fa fa-code fa-2x"></i>
+          <i class="fa fa-linux fa-2x"></i>
         </div>
       </div>
     </div>
@@ -101,7 +104,7 @@
                {value:"1", text: 'Admnistrator'},
                {value:"2", text: 'Pembimbing'},
                {value:"3", text: 'Praktikan'},
-               {value:"4", text: 'Tukang'},
+               {value:"4", text: 'Ketua'},
                ];
             // return this.periodes = [
             //     {value: '10-1', text: '10.1'},
@@ -112,11 +115,11 @@
         },
         methods: {
            async onSubmit(dataLogin) {
-               console.log(dataLogin);
-            // let dataLogin = this.dataLogin;
-            this.loader = true;
+            //    console.log(dataLogin);
 
             var self = this;
+            var kprogli = dataLogin.username.substr(1,1);
+            self.loader = true;
             localStorage.setItem("periode", dataLogin.periode);
                 axios.post('/user/authenticate', dataLogin)
 
@@ -130,20 +133,30 @@
                             localStorage.setItem("realname", data.user.nama);
                             localStorage.setItem("token", data.token);
                             localStorage.setItem("role", data.user._role);
+                            setTimeout(function(){
+                                self.$router.push('/dashboard');
+                                // window.location.href = '/dashboard';
+                            }, 1500)
                             
-                            window.location.href = '/dashboard';
                         } else if(res.data.error == true && res.data.kodeErr == "404"){
-                            return self.loginError = true, self.infoError = res.data.msg;
-
+                            setTimeout(function(){
+                                self.loader = false;
+                                return self.loginError = true, self.infoError = res.data.msg;
+                            }, 1500)
+                            
+                            return false;
                         }
 
                     })
 
 
-            return this.loader = false;
-            this.$router.push('/dashboard');
+            // return this.loader = false;
+            // setTimeout(function(){
+            //     self.$router.push('/dashboard');
+            // }, 2500)
+            
             //    this.$router.push('/dashboard');
-               event.preventDefault();
+            //    event.preventDefault();
            }
         },
         computed: {

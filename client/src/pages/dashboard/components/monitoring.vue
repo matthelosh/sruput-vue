@@ -25,7 +25,7 @@ div
 									h4 {{ siswa.nama }}
 									h5 HP: {{ siswa.hp }}
 
-					router-link.btn.btn-flat.btn-danger.center-block(to="/dashboard/bamonitoring", target="_blank") Cetak
+						a.btn.btn-flat.btn-primary.center-block(href="/dashboard/bamonitoring", target="_blank") Cetak
 		.col-sm-4
 			.well.well-danger
 				h4 Laporan Monitoring
@@ -46,7 +46,7 @@ div
 						span.input-group-addon
 							i.fa.fa-image
 				.form-group
-					button.btn.btn-flat.btn-primary.center-block Simpan
+					button.btn.btn-flat.btn-primary.center-block(type="submit") Simpan
 		.col-sm-4
 			.well.well-danger
 				h4 Cetak Berita Acara Monitoring
@@ -88,14 +88,14 @@ export default{
 				this.$store.dispatch("setdudi", kodeDudi);
 				axios.get('/protected/praktikan/'+kodeDudi, {headers: {'X-Access-Token': token}})
 					.then(siswas => { self.siswas = siswas.data});
-				axios.get('/protected/namaDudi/'+kodeDudi, {headers: {'X-Access-Token': token}})
-					.then(res => { localStorage.setItem("namaDudi", res.data.namaDudi)});
+				// axios.get('/protected/namaDudi/'+kodeDudi, {headers: {'X-Access-Token': token}})
+				// 	.then(res => { 
+				// 		// localStorage.setItem("namaDudi", res.data.namaDudi)
+				// 		console.log(res);
+				// 		});
 			}
 
 
-		},
-		cetakMonitoring(){
-			alert('Haloooow');
 		}
 	}
 }

@@ -5,70 +5,92 @@ div
 			span.hideSide(@click="hideSide")
 				i.fa.fa-chevron-left.fa-2x.visible-xs
 			span {{namauser}}
-
-		ul.nav.sidebar-nav(v-if="isAdmin == 1")
-			li.nav
-				a(href="/dashboard") Home
-					span.pull-right 
-						i.fa.fa-home
-			li.nav
-				router-link(to="/prakerlap") Prakerlap
-					span.pull-right 
-						i.fa.fa-list
-			li.nav
-				router-link(to="/pembimbing") Pembimbing
-					span.pull-right 
-						i.fa.fa-user
-			li.nav
-				router-link(to="/dudi") DU/DI
-					span.pull-right 
-						i.fa.fa-building
-			li.nav
-				router-link(to="/praktikan") Praktikan
-					span.pull-right 
-						i.fa.fa-users
-			li.nav
-				router-link(to="/jadwal" @click="hideSide") Jadwal Prakerlap
-					span.pull-right 
-						i.fa.fa-calendar
-		ul.nav.sidebar-nav(v-else-if="isAdmin == 2")
-			li.nav
-				a(href="/dashboard") Home
-					span.pull-right 
-						i.fa.fa-home
-			li.nav
-				router-link(to="/monitoring") Monitoring
-					span.pull-right 
-						i.fa.fa-television
-			li.nav
-				a(href="#") Pengajuan Prakerlap
-					span.pull-right 
-						i.fa.fa-file
-			li.nav
-				router-link(to="/jadwal") Jadwal Prakerlap
-					span.pull-right 
-						i.fa.fa-calendar
-		ul.nav.sidebar-nav(v-else-if="isAdmin == 3")
-			li.nav
-				a(href="/dashboard") Home
-					span.pull-right 
-						i.fa.fa-home
-			li.nav
-				a(href="#") Mendaftar Prakerlap
-					span.pull-right 
-						i.fa.fa-sign-up
-			li.nav
-				router-link(to="/jadwal") Jadwal Prakerlap
-					span.pull-right 
-						i.fa.fa-calendar
-		ul.nav.sidebar-nav
-			li.nav
-				a.exit(href="/logout")
-					i.fa.fa-power-off
-					| &nbsp; Keluar
+		.sidebar-box
+			ul.nav.sidebar-nav(v-if="isAdmin == 1")
+				li.nav
+					a(href="/dashboard") Home
+						span.pull-right 
+							i.fa.fa-home
+				li.nav
+					router-link(to="/prakerlap") Prakerlap
+						span.pull-right 
+							i.fa.fa-list
+				li.nav
+					router-link(to="/pembimbing") Pembimbing
+						span.pull-right 
+							i.fa.fa-user
+				li.nav
+					router-link(to="/dudi") DU/DI
+						span.pull-right 
+							i.fa.fa-building
+				li.nav
+					router-link(to="/praktikan") Praktikan
+						span.pull-right 
+							i.fa.fa-users
+				li.nav
+					router-link(to="/jadwal" @click="hideSide") Jadwal Prakerlap
+						span.pull-right 
+							i.fa.fa-calendar
+			ul.nav.sidebar-nav(v-else-if="isAdmin == 2")
+				li.nav
+					a(href="/dashboard") Home
+						span.pull-right 
+							i.fa.fa-home
+				li.nav
+					router-link(to="/monitoring") Monitoring
+						span.pull-right 
+							i.fa.fa-television
+				li.nav
+					a(href="#") Pengajuan Prakerlap
+						span.pull-right 
+							i.fa.fa-file
+				li.nav
+					router-link(to="/jurnals") Jurnal harian
+						span.pull-right 
+							i.fa.fa-calendar-check-o
+				li.nav
+					router-link(to="/jadwal") Jadwal Prakerlap
+						span.pull-right 
+							i.fa.fa-calendar
+			ul.nav.sidebar-nav(v-else-if="isAdmin == 3")
+				li.nav
+					router-link(to="/dashboard") Home
+						span.pull-right 
+							i.fa.fa-home
+				li.nav
+					router-link(to="/jurnal") Jurnal harian
+						span.pull-right 
+							i.fa.fa-calendar-check-o
+				li.nav
+					router-link(to="/jadwal") Jadwal Prakerlap
+						span.pull-right 
+							i.fa.fa-calendar
+			ul.nav.sidebar-nav(v-else-if="isAdmin == 4")
+				li.nav
+					router-link(to="/dashboard") Home
+						span.pull-right 
+							i.fa.fa-home
+				li.nav
+					router-link(to="/jurnals") Jurnal harian
+						span.pull-right 
+							i.fa.fa-calendar-check-o
+				li.nav
+					router-link(to="/praktikan") Praktikan
+							span.pull-right 
+								i.fa.fa-users
+				li.nav
+					router-link(to="/jadwal") Jadwal Prakerlap
+						span.pull-right 
+							i.fa.fa-calendar
+			ul.nav.sidebar-nav
+				li.nav
+					a.exit(href="/logout")
+						i.fa.fa-power-off
+						| &nbsp; Keluar
 
 	div.main.col-sm-10
 		<router-view></router-view>
+	
 </template>
 
 <script>
@@ -77,9 +99,10 @@ import eventHub from './../../../main'
         data: function(){
             return {
 				name: 'DashMain',
-				sideSlide: 'hideLeft',
+				sideSlide: 'hideSide',
 				url: 'url',
-				user : localStorage.getItem("username"),
+				// user : localStorage.getItem("username"),
+				user: 'gt12',
 				image: './../../../../dist/assets/img/profil/'+localStorage.getItem("username")+'.jpg'
 				
             }
@@ -136,32 +159,32 @@ import eventHub from './../../../main'
 			background: transparentize(white, 0.5)
 			width: 100%
 			padding: 5px
-
-	.nav
-		a
-			color: #efefef
-			background:
-				image: linear-gradient(to right, rgba(0,0,0,0) 50%,transparentize(#efefef, 0.8) 50%)
-				size: 200% 100%
-				position: left center
-			transition: all .35s linear
-			
-			&:hover
-				background:
-				image: linear-gradient(to right, rgba(0,0,0,0) 50%,transparentize(#efefef, 0.8) 50%)!important
-				size: 200% 100%
-				position: right center
-
-			&:focus, &:active
-				color: #363679
-		.exit
-			color: #ff6161
-			&:hover
-				background: transparentize(#ff6161, 0.5)
+	.sidebar-box
+		.nav
+			a
 				color: #efefef
+				background:
+					image: gradient(to right, rgba(0,0,0,0) 50%,transparentize(#efefef, 0.8) 50%)
+					size: 200% 100%
+					position: 0!important
+				transition: all .35s linear
+				
+				&:hover
+					background:
+					image: gradient(to right, rgba(0,0,0,0) 50%,transparentize(#efefef, 0.8) 50%)!important
+					size: 200% 100%
+					position: 100%!important
 
-			&:focus, &:active
-				color: #363679
+				&:focus, &:active
+					color: #363679
+			.exit
+				color: #ff6161
+				&:hover
+					background: transparentize(#ff6161, 0.5)
+					color: #efefef
+
+				&:focus, &:active
+					color: #363679
 
 .main
 	margin-left: 16.66666667%
@@ -169,22 +192,23 @@ import eventHub from './../../../main'
 	// overflow-x: hidden
 
 @media(max-width:767px)
+	// .hideSide
+	// 	position: fixed
+	// 	top: 50px
+	// 	right: -35px
+	// 	width: 50px!important
+	// 	height: 50px
+	// 	border-radius: 50%
+	// 	background: rgba(45,71,86, 0.9)!important
+	// 	color: #efefef
+	// 	i
+	// 		line-height: 40px
+	// 		text-align: center
 	.hideSide
-		position: fixed
-		top: 50px
-		right: -35px
-		width: 50px!important
-		height: 50px
-		border-radius: 50%
-		background: rgba(45,71,86, 0.9)!important
-		color: #efefef
-		i
-			line-height: 40px
-			text-align: center
-	.hideLeft
-		left: -50%
+		left: -110%
 		top: 0
 		transition: all .35s linear
+		position: fixed
 	.show
 		position: fixed
 		left: 0!important
@@ -192,4 +216,9 @@ import eventHub from './../../../main'
 		z-index: 999
 		top: 0
 		transition: all .35s linear
+		overflow: scroll
+		.sidebar-box
+			height: 200px
+			overflow: auto
+
 </style>

@@ -1,6 +1,10 @@
 <template lang="pug">
 div
-	h1 Selamat Datang Tuan / Nyonya!.. <br><small>{{user}}</small>
+	.container-fluid
+		.dash-box
+			h1.text-center Selamat Datang! <br>
+				small {{user}}
+
 </template>
 
 <script>
@@ -14,5 +18,6 @@ div
 </script>
 
 <style lang="sass" scoped>
-
+	.dash-box
+		min-height: 70vh;
 </style>

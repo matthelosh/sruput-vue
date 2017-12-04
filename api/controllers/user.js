@@ -9,12 +9,12 @@ let express = require('express'),
     Guru    = schema.Guru,
     Log     = schema.Log;
 
-    router.use(function(req, res, next) {
-        res.header("Access-Control-Allow-Origin", 'http://localhost:3456');
-        res.header("Access-Control-Allow-Methods", 'GET, PUT, DELETE, OPTIONS');
-        res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With, content-type, application/json','X-Access-Token');
-        next();
-    });
+    // router.use(function(req, res, next) {
+    //     res.header("Access-Control-Allow-Origin", 'http://localhost:3456');
+    //     res.header("Access-Control-Allow-Methods", 'GET, PUT, DELETE, OPTIONS');
+    //     res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With, content-type, application/json','X-Access-Token');
+    //     next();
+    // });
     router.post('/signup', function(req, res){
         let user = new User({
             _id: req.body.username,

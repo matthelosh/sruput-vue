@@ -36,6 +36,7 @@ var pesertaSchema = new Schema({
     }
 });
 
+
 var guruSchema = new Schema({
     _id: String,
     password: String,
@@ -60,7 +61,10 @@ var dudiSchema = new Schema({
     alamat: String,
     kota: String,
     telp: String,
-    _guru: String
+    _guru: {
+        type: String,
+        ref: 'Guru'
+    }
 });
 
 var roleSchema = new Schema({
@@ -78,12 +82,41 @@ var logSchema = new Schema({
 
 var jadwalSchema= new Schema({
     _id: String,
-    start: Date,
-    end: Date,
+    start: String,
+    end: String,
     kegiatan: String,
     pelaksana: String,
     tempat: String
 });
+var monitoringSchema = new Schema({
+    _id: String,
+    _guru: { type: String, ref: 'Guru'},
+    tglCetak: String,
+    masalah: String,
+    solving: String
+});
+var nilaiSchema = new Schema({
+    progli: String,
+    idSiswa: {
+        type: String,
+        ref: 'Peserta'
+    },
+    skor: Array,
+    na: Number,
+    predikat: String
+});
+var jurnalSchema = new Schema({
+    _id: String,
+    nis: {
+        type: String,
+        ref: 'Peserta',
+    },
+    tgl: String,
+    kegiatan: String,
+    lokasi: String,
+    catatan: String,
+    ket: String
+})
 
 var User = mongoose.model('User', userSchema, 'users'),
     Peserta = mongoose.model('Peserta', pesertaSchema, 'praktikans'),
@@ -91,7 +124,10 @@ var User = mongoose.model('User', userSchema, 'users'),
     Dudi = mongoose.model('Dudi', dudiSchema, 'dudis'),
     Role = mongoose.model('Role', roleSchema, 'roles'),
     Log = mongoose.model('Log', logSchema, 'logs'),
-    Jadwal = mongoose.model('Jadwal', jadwalSchema, 'jadwals');
+    Monitoring = mongoose.model('Monitoring', monitoringSchema),
+    Jadwal = mongoose.model('Jadwal', jadwalSchema, 'jadwals'),
+    Nilai = mongoose.model('Nilai', nilaiSchema, 'nilais'),
+    Jurnal = mongoose.model('Jurnal', jurnalSchema, 'jurnals');
 
 module.exports = {
     User: User,
@@ -100,5 +136,8 @@ module.exports = {
     Dudi: Dudi,
     Role: Role,
     Log: Log,
-    Jadwal: Jadwal
-}
+    Monitoring: Monitoring,
+    Jadwal: Jadwal,
+    Nilai: Nilai,
+    Jurnal: Jurnal
+};

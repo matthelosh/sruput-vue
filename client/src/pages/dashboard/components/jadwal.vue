@@ -2,7 +2,7 @@
 .container-fluid
     .card
         .card-header.top-bordered
-            button.btn.btn-sm.flat.btn-danger(v-if="role == 1" @click="toggleMode('addJadwal')") Buat Jadwal
+            button.btn.btn-sm.flat.btn-danger(v-if="role == 1 || role == 4" @click="toggleMode('addJadwal')") Buat Jadwal
             h1.text-center JADWAL PRAKERLAP ANGKATAN 10.2 <br>
                 i.fa.fa-calendar
         .card-body
@@ -43,83 +43,94 @@
                     .form-group
                         button.btn.flat.btn-primary(type="submit") Simpan
 </template>
+
 <script>
-import axios from 'axios'
-import moment from 'moment'
-export default {
-  data(){
-      return {
-          role: localStorage.getItem("role"),
-          mode: '',
-          jadwal: {},
-          token : localStorage.getItem("token"),
-          jadwals: [],
-          isNow: false,
-          tgl : 'tgl'
-          
-      }
-  },
-  created(){
-      this.getJadwals();
-    //   this.cekTanggal();
-  },
-  computed: {
-      periode(){
-          return localStorage.getItem("periode");
-      },
-    //   jadwalsFiltered: function(){
-    //       var self = this;
-    //       return this.jadwals.filter(function(jadwal){
-    //           return jadwal.start.toLocalString();
-    //           return jadwal.end.toLocalString();
-    //       })
-    //   }
-     
-  },
-  filters: {
-      formatDate: function(date){
-        return moment(date).format('DD MMMM YYYY H:m:s a');
-      },
-      selcted: function(text){
-          return date.toUpperCase();
-      }
-      
-  },
-  methods: {
-      
-      toggleMode(mode){
-          var self= this;
-          self.mode = mode;
-      },
-      addJadwal(jadwal){
-        var self = this;
-        var token = self.token;
-        console.log(jadwal);
-        axios.post('/protected/addJadwal', jadwal, {headers: {'X-Access-Token': token}})
-            .then(res=>{
-                if(res.data.success == true) {
-                    var msg = res.data.msg;
-                    alert(res.data.msg );
-                    self.jadwal ={}
-                    console.log(res);
-                    self.jadwal = {};
-                } else {
-                    alert(res.data);
-                }
-            })
-      },
-       getJadwals(){
-          var self = this;
-          var token = self.token;
-          axios.get('/protected/jadwals', {headers: {'X-Access-Token': token}})
-                .then(res=>{
-                    self.jadwals = res.data;
-                });
-                
-      }
-  }
-}
+    import axios from 'axios'
+    import moment from 'moment'
+    export default {
+        data() {
+            return {
+                role: localStorage.getItem("role"),
+                mode: '',
+                jadwal: {},
+                token: localStorage.getItem("token"),
+                jadwals: [],
+                isNow: false,
+                tgl: 'tgl'
+    
+            }
+        },
+        created() {
+            this.getJadwals();
+            //   this.cekTanggal();
+        },
+        computed: {
+            periode() {
+                return localStorage.getItem("periode");
+            },
+            //   jadwalsFiltered: function(){
+            //       var self = this;
+            //       return this.jadwals.filter(function(jadwal){
+            //           return jadwal.start.toLocalString();
+            //           return jadwal.end.toLocalString();
+            //       })
+            //   }
+    
+        },
+        filters: {
+            formatDate: function(date) {
+                moment.locale("id");
+                return moment(date).format('DD MMMM YYYY H:m:s');
+            },
+            selected: function(text) {
+                return date.toUpperCase();
+            }
+    
+        },
+        methods: {
+    
+            toggleMode(mode) {
+                var self = this;
+                self.mode = mode;
+            },
+            addJadwal(jadwal) {
+                var self = this;
+                var token = self.token;
+                console.log(jadwal);
+                axios.post('/protected/addJadwal', jadwal, {
+                        headers: {
+                            'X-Access-Token': token
+                        }
+                    })
+                    .then(res => {
+                        if (res.data.success == true) {
+                            var msg = res.data.msg;
+                            alert(res.data.msg);
+                            self.jadwal = {}
+                            console.log(res);
+                            self.jadwal = {};
+                        } else {
+                            alert(res.data);
+                        }
+                    });
+            },
+            getJadwals() {
+                var self = this;
+                var token = self.token;
+                axios.get('/protected/jadwals', {
+                        headers: {
+                            'X-Access-Token': token
+                        }
+                    })
+                    .then(res => {
+                        self.jadwals = res.data;
+                    });
+    
+            }
+        }
+    }
 </script>
+
 <style lang="sass" scoped>
 .tandai
     background: #987590

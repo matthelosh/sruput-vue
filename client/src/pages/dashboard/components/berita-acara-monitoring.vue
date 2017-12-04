@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="row hidden-print fixed" v-bind:class="{float: over}">
+    <div class="row hidden-print fixed" v-bind:class="{'float': 'over'}">
         <button class="btn btn-warning center-block flat" @click="cetak"><i class="fa fa-print"></i> Cetak</button>
         <br>
     </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="col-sm-3">
             <p>: {{guru}}</p>
-            <p>:  {{namaDudi}}</p>
+            <p>:  {{dudi.namaDudi}}</p>
             <p>:  {{total}} </p>
         </div>
         <div class="col-sm-3">
@@ -137,83 +137,114 @@
 
 <script>
 import store from './../../../store/index.js'
-import {mapState, mapGetters} from 'vuex'
+// import {mapState, mapGetters} from 'vuex'
+import moment from 'moment'
 import axios from 'axios'
 export default {
     data: function(){
         return {
-
-            //    kaprog: {},
+                over: false,
+            //    kaprog:    {},
                 dudi: '',
                 siswas: [],
                 tahap:'',
+                token: localStorage.getItem("token"),
+                jadwals: ''
 
         }
     },
     created(){
         this.getSiswas();
-        if(window.scroll >= 50){
-            over = true;
-        } else {
-            over = false;
-        }
+        this.getDudi();
+        this.kodeMon();
+        if(window.scroll >= 50) this.over = true;
+        this.over = false;
+        
     },
 
     methods:{
+        kodeMon(){
+            var self = this,
+                token = self.token,
+                d   = new Date(),
+                tgl = moment(d).format('DMMYYYYHms');
+            console.log(tgl);
+
+        },
         cetak(){
             window.print();
         },
+        getDudi(){
+            var kodeDudi = localStorage.getItem("dudi"),
+                self = this,
+                token = self.token;
+            axios.get('/protected/namaDudi/'+kodeDudi, {headers: {'X-Access-Token': token}})
+                .then(res=>{
+                    self.dudi = res.data;
+                });
+        },
         getSiswas(){
             var kodeDudi = localStorage.getItem("dudi"),
-            token = localStorage.getItem("token"),
-            self = this;
+                self = this,
+                token = self.token;
             axios.get('/protected/praktikan/'+kodeDudi, {headers: {'X-Access-Token': token}})
-				.then(siswas => { self.siswas = siswas.data});
-        }
+				.then(siswas => { 
+                    self.siswas = siswas.data
+                    console.log(siswas);
+                });
+        },
     },
     computed:{
        guru(){
            return localStorage.getItem("realname");
        },
        namaDudi(){
-           return localStorage.getItem("namaDudi");
+           var self= this;
+           var token = self.token;
+           var kode = localStorage.getItem("dudi");
+           axios.get('/protected/namaDudi/kode', {headers: {'X-Access-Token': token}})
+                .then(res=>{
+                    return res.data.namaDudi;
+                });
        },
        total(){
            return this.siswas.length;
        },
        progli(){
-           return this.siswas[0].progli.toUpperCase();
-       },
-       tanggal(){
-           var d = Date.now();
-           var tgl = new Date(d);
-           var tanggal = tgl.toDateString();
-           return tanggal;
+        //    return this.siswas[0].progli.toUpperCase();
        },
        monKe(){
-           if (( Date.now() >= new Date("2017-08-7") && Date.now() <= new Date("2017-08-09"))) {
-                return "I (SATU)";
-            } else if(( Date.now() >= new Date("2017-09-18") && Date.now() <= new Date("2017-10-01"))){
-                return "II (DUA)";
-            } else if(( Date.now() >= new Date("2017-10-16") && Date.now() <= new Date("2017-10-30"))){
-                return "III (TIGA)";
-            }else if(( Date.now() >= new Date("2017-11-13") && Date.now() <= new Date("2017-11-26"))){
-                return "IV (EMPAT)";
-            }else{
-                alert("Masa Monitoring sudah habis");
-                return "Masa Monitoring Sudah Habis. Silahkan konsultasi kepada Ketua Prakerlap";
-                return false;
-            };
+            var self = this;
+            var token = self.token;
+            var now = Date.now();
+            if(now < new Date("2018-01-29")) return "Belum Waktunya Monitoring";
+            if(now >= new Date("2018-01-29") && now <= new Date("2018-02-10")) return "I (SATU)";
+            if(now >= new Date("2018-03-05") && now <= new Date("2018-03-17")) return "II(DUA)";
+            if(now >= new Date("2018-04-09") && now <= new Date("2018-04-21")) return "III (TIGA)";
+            if(now >= new Date("2018-0514") && now <= new Date("2018-05-26")) return "IV (EMPAT)";
+            else return "Monitoring Periode ini sudah berakhir. Waktunya Penjemputan";
+       },
+       tanggal(){
+            var tgl = new Date();
+            var haris = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat','Sabtu'],
+                bulans = ['Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nop', 'Des'];
+                var day = tgl.getDay();
+                var hari = haris[day];
+                var tanggal = tgl.getDate();
+                var m = tgl.getMonth();
+                var bln = bulans[m];
+                var th = tgl.getFullYear();
+            return hari+', '+tanggal+'  '+bln+' '+th;
        },
        kaprog(){
-           if(this.siswas[0].progli == "tkj" || this.siswas[0].progli == "mm") {
-               return "Nanang Wahyudianto, S.Kom";
+        //    if(this.siswas[0].progli == "tkj" || this.siswas[0].progli == "mm") {
+        //        return "Nanang Wahyudianto, S.Kom";
 
 
-           } else {
-               return "Sayit Anwar, S,Pd";
+        //    } else {
+        //        return "Sayit Anwar, S,Pd";
 
-           }
+        //    }
        }
     }
 
